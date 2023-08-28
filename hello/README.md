@@ -1,8 +1,17 @@
-# Using Docker for Python courses
+# Hello in C in Podman container
 
-Follow these instructions for Beginning Python, Advanced Python
+Source is 'hello.c'
 
-## Initial setup
+Build with
+'''sh
+gcc -g -o hello hello.c
+'''
+
+Run with
+
+'''sh
+bash run.sh ./hello
+'''
 
 Note that the initial setup may take some time to build docker image.
 
