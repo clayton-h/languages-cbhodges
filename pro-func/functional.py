@@ -34,13 +34,10 @@ def main():
 		print("mult for multiplication\n")
 
 		choice = input(": ")
-		
-		if choice == "quit":
-			break
 
 		if choice in operations:
-			x = float(input("Enter first number: "))
-			y = float(input("Enter second number: "))
+			x = float(input("enter first number: "))
+			y = float(input("enter second number: "))
 
 			result = operation(operations[choice], x, y)
 			print(result)
