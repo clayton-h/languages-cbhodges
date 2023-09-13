@@ -14,7 +14,7 @@ def div(x, y):
 def mult(x, y):
 	return (x * y)
 
-#master function
+#higher-order function
 def operation(op, x, y):
 	return op(x, y)
 
