@@ -13,8 +13,8 @@ def string_match(s) -> bool:
 
     # Regex pattern to match Python string literals
     pattern = re.compile(r"""
-        (?: # Non-capturing group (doesn't save captured matched text)
-            ' (?: # Single quoted string
+        (?:
+            (?:                     # Non-capturing group (doesn't save captured matched text)
                 \\.                 # Escaped backslash and dot operator
                 | [abfnrtv"']       # Match common escape characters
                 | x[0-9A-Fa-f]{2}   # Match hexadecimal escape (\xhh)
@@ -22,21 +22,9 @@ def string_match(s) -> bool:
                 | N\{[^}]+\}        # Match Unicode character by name (\N{name})
                 | u[0-9A-Fa-f]{4}   # Match Unicode character by 4-digit hexadecimal
                 | U[0-9A-Fa-f]{8}   # Match Unicode character by 8-digit hexadecimal
-                | r|
+                | r|                # Match a raw string
                 | [^'\\]            # Don't match a single quote or backslash
-            )* '
-        |
-            " (?: # Double quoted string
-                \\. 
-                | [abfnrtv"']
-                | x[0-9A-Fa-f]{2}
-                | [0-7]{1,3}
-                | N\{[^}]+\}
-                | u[0-9A-Fa-f]{4}
-                | U[0-9A-Fa-f]{8}
-                | r|
-                | [^"\\] 
-            )* " 
+            )*
         )
     """, re.VERBOSE)
 
@@ -47,10 +35,8 @@ def string_match(s) -> bool:
 
 # Test the function with some examples
 examples = [
-    "'hello'",          # Single quoted string
-    '"hello world"',    # Double quoted string
-    "'\a'",             # Bell character
-    r'r'\n'             # Raw string with newline
+    "hello",
+    'world'
 ]
 
 
