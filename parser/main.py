@@ -14,6 +14,7 @@ def string_match(s) -> bool:
     # Regex pattern to match Python string literals
     pattern = re.compile(r"""
         (?:                         # Non-capturing group (doesn't save captured matched text)
+            r?                      # Raw strings
             '(?:                    # Single-quoted strings
                 \\.                 # Escaped backslash and dot operator
                 | [abfnrtv"']       # Match common escape characters
@@ -22,10 +23,10 @@ def string_match(s) -> bool:
                 | N\{[^}]+\}        # Match Unicode character by name (\N{name})
                 | u[0-9A-Fa-f]{4}   # Match Unicode character by 4-digit hexadecimal
                 | U[0-9A-Fa-f]{8}   # Match Unicode character by 8-digit hexadecimal
-                | r|                # Match a raw string
                 | [^'\\]            # Don't match a single quote or backslash
             )*'
             |
+            r?                      # Raw strings
             "(?:                    # Double-quoted strings
                 \\.                 # Escaped backslash and dot operator
                 | [abfnrtv"']       # Match common escape characters
@@ -34,7 +35,6 @@ def string_match(s) -> bool:
                 | N\{[^}]+\}        # Match Unicode character by name (\N{name})
                 | u[0-9A-Fa-f]{4}   # Match Unicode character by 4-digit hexadecimal
                 | U[0-9A-Fa-f]{8}   # Match Unicode character by 8-digit hexadecimal
-                | r|                # Match a raw string
                 | [^'\\]            # Don't match a single quote or backslash
             )*"
         )
@@ -51,8 +51,8 @@ examples = [
     "'world'",  # single quoted string - exp: True
     "'\a'",     # bell character - exp: True
     "'\\'",     # escaped backslash - exp: False
-    "'\''",     # escaped single quote - exp: False
-    "''"
+    "\'",       # escaped single quote - exp: False
+    R'r"\n"'    # raw string with capital 'R' - exp: True
 ]
 
 
