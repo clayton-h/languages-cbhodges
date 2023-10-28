@@ -47,12 +47,24 @@ def string_match(s) -> bool:
 
 # Test the function with some examples
 examples = [
+    R'r"\n"'    # raw string with capital 'R' - exp: True
     '"hello"',  # double quoted string - exp: True
     "'world'",  # single quoted string - exp: True
-    "'\a'",     # bell character - exp: True
-    "'\\'",     # escaped backslash - exp: False
-    "\'",       # escaped single quote - exp: False
-    R'r"\n"'    # raw string with capital 'R' - exp: True
+
+
+    "'\a'",    # bell escape character - exp: True
+    "'\\'",    # escaped backslash - exp: False
+    "\'",      # escaped single quote - exp: False
+
+    '"\x41"',  # Hexadecimal escape (\xhh) - exp: True
+    '"\101"',  # Octal escape (\ooo) - exp: True
+
+    # Unicode by name (\N{name}) - exp: True
+    '"\N{LATIN CAPITAL LETTER A}"',
+    # Unicode by 4-digit hexadecimal (\u) - exp: True
+    '"\u0041"',
+    # Unicode by 8-digit hexadecimal (\U) - exp: True
+    '"\U00000041"',
 ]
 
 
