@@ -1,10 +1,13 @@
+# Automates a headless browser (no GUI)
+# to scrape content from websites formatted with JavaScript
 from selenium import webdriver
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.edge.options import Options
-from selenium.webdriver.edge.service import Service  # Import Service
+from selenium.webdriver.edge.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+# Scrapes static HTML web content
 from bs4 import BeautifulSoup
 
 # Setup Edge options
@@ -23,6 +26,7 @@ url = "http://quotes.toscrape.com/js/"
 driver.get(url)
 
 # Use WebDriverWait instead of time.sleep()
+# to wait for JavaScript to load
 wait = WebDriverWait(driver, 10)
 wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "span.text")))
 
