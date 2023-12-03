@@ -63,12 +63,13 @@ def parse_dynamic_content(url):
 # Main function to decide which parsing function to use
 def main(url, is_dynamic):
     if is_dynamic:
-        print("JAVASCRIPT")
         parse_dynamic_content(url)
     else:
         parse_static_html(url)
 
 
-# Example usage
-main("http://quotes.toscrape.com", is_dynamic=False)
-# main("https://www.webscraper.io/test-sites/e-commerce/allinone", is_dynamic=True)
+if __name__ == "__main__":
+    # Example usage
+    # "http://quotes.toscrape.com", is_dynamic=False
+    # "https://www.webscraper.io/test-sites/e-commerce/allinone", is_dynamic=True
+    main("http://quotes.toscrape.com", is_dynamic=False)
