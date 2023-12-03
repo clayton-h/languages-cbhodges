@@ -1,56 +1,74 @@
-# Automates a headless browser (no GUI)
-# to scrape content from websites formatted with JavaScript
+import requests
 from selenium import webdriver
+""" Automates a headless browser (no GUI)
+    to scrape dynamic JavaScript web content
+"""
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.edge.options import Options
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-# Scrapes static HTML web content
 from bs4 import BeautifulSoup
+""" Scrapes static HTML web content
+"""
 
-# Setup Edge options
-edge_options = Options()
-edge_options.add_argument("--headless")  # Runs Edge in headless mode
 
-# Use WebDriver Manager to manage the Edge driver
-# The EdgeChromiumDriverManager().install() returns the path to the edge driver executable as a string
-# The Service class is used to create a service with that path
-driver = webdriver.Edge(service=Service(
-    EdgeChromiumDriverManager().install()), options=edge_options)
+# Function to parse static HTML content
+def parse_static_html(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    # Extract content as needed, for example, quotes
+    quotes = soup.find_all('span', class_='text')
+    for quote in quotes:
+        print(quote.text)
 
-# http://quotes.toscrape.com/js/ #HTML
-url = "https://www.webscraper.io/test-sites/e-commerce/allinone"
 
-# Use the browser to get the URL
-driver.get(url)
+# Function to parse dynamic JavaScript content
+def parse_dynamic_content(url):
+    # Setup Edge options and run Edge in headless mode
+    edge_options = Options()
+    edge_options.add_argument("--headless")
 
-# Use WebDriverWait instead of time.sleep()
-# to wait for JavaScript to load
-wait = WebDriverWait(driver, 10)
-wait.until(EC.visibility_of_element_located(
-    (By.CSS_SELECTOR, ".thumbnail")))  # span.text #HTML
+    # Use WebDriver Manager to manage the Edge driver
+    driver = webdriver.Edge(service=Service(
+        EdgeChromiumDriverManager().install()), options=edge_options)
 
-# Now that the necessary elements are visible, get the final HTML
-final_html = driver.page_source
-driver.quit()
+    # Use the browser to get the URL
+    driver.get(url)
 
-# Use Beautiful Soup to parse the final HTML
-soup = BeautifulSoup(final_html, 'html.parser')
+    # Use the WebDriverWait function instead of time.sleep()
+    # to wait for dynamic content to load
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.visibility_of_element_located(
+        (By.CSS_SELECTOR, ".thumbnail")))
 
-# # Now you can find elements as if it's a static page (HTML)
-# quotes = soup.find_all('span', class_='text')
-# for quote in quotes:
-#     print(quote.text)
+    # Now that the necessary elements are visible,
+    # get the final HTML
+    final_html = driver.page_source
+    driver.quit()
 
-# Find elements containing products; adjust the selectors to match the site structure
-# For example, this will find all the 'div' elements with the class 'caption'
-products = soup.find_all('div', class_='caption')
-for product in products:
-    # You might find the name of the product in an 'a' tag with a 'title' attribute
-    name = product.find('a', {'title': True}).get(
-        'title', 'No title attribute')
-    # Prices might be found in an 'h4' tag with class 'price'
-    price = product.find('h4', class_='price').text
-    print(f'Product Name: {name}, Price: {price}')
+    # Use Beautiful Soup to parse the final HTML
+    soup = BeautifulSoup(final_html, 'html.parser')
+    products = soup.find_all('div', class_='caption')
+
+    # Find elements containing products and print them
+    for product in products:
+        name = product.find('a', {'title': True}).get(
+            'title', 'No title attribute')
+        price = product.find('h4', class_='price').text
+        print(f'Product Name: {name}, Price: {price}')
+
+
+# Main function to decide which parsing function to use
+def main(url, is_dynamic):
+    if is_dynamic:
+        print("JAVASCRIPT")
+        parse_dynamic_content(url)
+    else:
+        parse_static_html(url)
+
+
+# Example usage
+main("http://quotes.toscrape.com", is_dynamic=False)
+# main("https://www.webscraper.io/test-sites/e-commerce/allinone", is_dynamic=True)
